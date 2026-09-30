@@ -1,0 +1,22 @@
+{
+  "name": "@travelpad/design-tokens",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Design tokens (màu, chữ, khoảng cách, bo góc) cho web (CSS vars) và mobile (RN)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch --preserveWatchOutput",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@travelpad/config": "workspace:*",
+    "typescript": "^5.9.2"
+  }
+}

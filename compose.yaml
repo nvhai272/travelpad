@@ -1,0 +1,74 @@
+# Môi trường dev chạy 100% bằng Docker. Dùng qua Makefile: `make up`, `make logs`, `make sh`...
+# Container Node chạy bằng UID/GID của host để file sinh ra (node_modules, dist, migration) thuộc về bạn.
+name: travelpad
+
+x-node: &node
+  build: { context: ., dockerfile: infra/docker/dev.Dockerfile }
+  image: travelpad-dev:latest
+  user: "${UID:-1000}:${GID:-1000}"
+  working_dir: /app
+  volumes: [".:/app"]
+  env_file: [.env]
+
+services:
+  # ---------- Hạ tầng ----------
+  postgres:
+    image: postgis/postgis:16-3.4
+    environment: { POSTGRES_USER: travelpad, POSTGRES_PASSWORD: travelpad, POSTGRES_DB: postgres }
+    # POSTGRES_DB=postgres: image postgis tự cài topology/tiger vào DB này. DB "travelpad" do Prisma tạo sạch
+    # từ template1 và migration init tự bật postgis → không bị drift.
+    ports: ["${POSTGRES_PORT:-5432}:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U travelpad -d postgres"]
+      interval: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports: ["${REDIS_PORT:-6379}:6379"]
+
+  # Object storage tương thích S3 (ảnh, media). Dev: không bật auth. Prod: S3/R2 thật.
+  s3:
+    image: chrislusf/seaweedfs:latest
+    command: server -dir=/data -s3 -s3.port=8333 -master.volumeSizeLimitMB=1024
+    ports: ["${S3_PORT:-8333}:8333"]
+    volumes: [s3data:/data]
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports: ["8025:8025"]
+
+  # ---------- Node ----------
+  # One-shot: cài dependency, build shared packages, generate Prisma client.
+  install:
+    <<: *node
+    command: sh -c "pnpm install --frozen-lockfile=false && pnpm --filter './packages/*' build && pnpm --filter @travelpad/api prisma:generate"
+
+  # Watch & rebuild packages/* (contracts, api-client, tokens, i18n) khi sửa.
+  packages:
+    <<: *node
+    command: pnpm --parallel --filter './packages/*' dev
+    depends_on:
+      install: { condition: service_completed_successfully }
+
+  api:
+    <<: *node
+    command: pnpm --filter @travelpad/api dev
+    ports: ["${API_PORT:-4000}:4000"]
+    depends_on:
+      install: { condition: service_completed_successfully }
+      postgres: { condition: service_healthy }
+      redis: { condition: service_started }
+
+  web:
+    <<: *node
+    command: pnpm --filter @travelpad/web dev
+    ports: ["${WEB_PORT:-3000}:3000"]
+    depends_on:
+      install: { condition: service_completed_successfully }
+      api: { condition: service_started }
+
+volumes:
+  pgdata:
+  s3data:

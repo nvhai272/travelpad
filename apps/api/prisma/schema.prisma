@@ -1,0 +1,459 @@
+// travelpad – schema dữ liệu. Toạ độ ghi qua lat/lng (Float); cột PostGIS `geog` do trigger
+// place_sync_geog điền tự động (migration init) để truy vấn "gần tôi" bằng raw SQL.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [postgis, unaccent, pg_trgm]
+}
+
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+/// Loại tài khoản hiển thị cho cộng đồng (BR-USER-01): du khách hoặc nhà cung cấp dịch vụ du lịch
+enum AccountType {
+  traveler
+  provider
+}
+
+enum PlaceCategory {
+  food
+  stay
+  camping
+  hiking
+  sightseeing
+  other
+}
+
+enum Region {
+  north
+  central
+  highlands
+  south
+}
+
+enum PlaceKind {
+  destination // vùng/điểm đến lớn – ghim trên quả cầu (Sapa, Đà Lạt)
+  spot // vị trí cụ thể thuộc destination (Đỉnh Fansipan)
+}
+
+enum PostStatus {
+  draft
+  published
+  hidden
+}
+
+enum JourneyStatus {
+  planning
+  ongoing
+  completed
+}
+
+enum Visibility {
+  public
+  friends
+  private
+}
+
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String?
+  username     String   @unique
+  displayName  String
+  bio          String?
+  avatarUrl    String?
+  coverUrl     String?
+  role         Role        @default(USER)
+  accountType  AccountType @default(traveler)
+  locale       String   @default("vi")
+  xp           Int      @default(0)
+  level        Int      @default(1)
+  /// UserSettings (xem @travelpad/contracts/settings.ts) – validate bằng zod khi đọc/ghi
+  settings     Json     @default("{}")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  refreshTokens RefreshToken[]
+  reviews       Review[]
+  posts         Post[]
+  comments      Comment[]
+  likes         PostLike[]
+  bookmarks     Bookmark[]
+  journeys      Journey[]
+  media         Media[]
+  notifications Notification[]
+  checkins      Checkin[]
+  searchLogs    SearchLog[]
+  helpfulVotes  ReviewHelpful[]
+  providers       ServiceProvider[]
+  connectRequests ConnectRequest[]
+  providerReviews ProviderReview[]
+  following     Follow[]       @relation("follower")
+  followers     Follow[]       @relation("following")
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  userAgent String?
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Place {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  name        String
+  province    String
+  region      Region
+  kind        PlaceKind     @default(spot)
+  parentId    String?
+  category    PlaceCategory
+  priceLevel  Int? // 1=$ 2=$$ 3=$$$
+  bestSeason  String?
+  hotScore    Float         @default(0) // tính định kỳ từ check-in, review, lượt xem
+  geog        Unsupported("geography(Point, 4326)")? // trigger điền từ lat/lng – chỉ đọc qua $queryRaw
+  description String
+  address     String?
+  lat         Float
+  lng         Float
+  coverUrl    String?
+  gallery     String[]
+  tags        String[]
+  isFeatured  Boolean       @default(false)
+  ratingAvg   Float         @default(0)
+  reviewCount Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  parent   Place?        @relation("hierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children Place[]       @relation("hierarchy")
+  reviews  Review[]
+  posts    Post[]
+  stops    JourneyStop[]
+  checkins  Checkin[]
+  providers ServiceProvider[]
+
+  @@index([province])
+  @@index([region, category])
+  @@index([kind, hotScore])
+  @@index([parentId])
+  @@index([isFeatured, ratingAvg])
+  @@index([geog], type: Gist)
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, map: "Place_name_trgm_idx")
+}
+
+model Review {
+  id           String          @id @default(cuid())
+  placeId      String
+  authorId     String
+  rating       Int
+  content      String
+  helpfulCount Int             @default(0) // số lượt "Hữu ích" – thước đo chất lượng review (BR-REV-05)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  place        Place           @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  author       User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  helpful      ReviewHelpful[]
+
+  @@unique([placeId, authorId])
+  @@index([placeId, createdAt])
+  @@index([authorId, createdAt])
+}
+
+/// Thành viên đánh dấu một review là "Hữu ích" (không tự vote review của mình)
+model ReviewHelpful {
+  userId    String
+  reviewId  String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@id([userId, reviewId])
+  @@index([reviewId, createdAt])
+}
+
+model Post {
+  id           String     @id @default(cuid())
+  slug         String     @unique
+  title        String
+  excerpt      String
+  content      String
+  coverUrl     String?
+  gallery      String[]
+  tags         String[]
+  status       PostStatus @default(draft)
+  authorId     String
+  placeId      String?
+  journeyId    String?
+  likeCount    Int        @default(0)
+  commentCount Int        @default(0)
+  publishedAt  DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  place     Place?     @relation(fields: [placeId], references: [id], onDelete: SetNull)
+  journey   Journey?   @relation(fields: [journeyId], references: [id], onDelete: SetNull)
+  comments  Comment[]
+  likes     PostLike[]
+  bookmarks Bookmark[]
+
+  @@index([status, publishedAt])
+  @@index([authorId, publishedAt])
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  postId    String
+  authorId  String
+  parentId  String?
+  content   String
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent    Comment?  @relation("thread", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("thread")
+
+  @@index([postId, createdAt])
+}
+
+model PostLike {
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([userId, postId])
+  @@index([postId])
+}
+
+model Bookmark {
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([userId, postId])
+}
+
+model Journey {
+  id         String        @id @default(cuid())
+  ownerId    String
+  title      String
+  status     JourneyStatus @default(planning)
+  visibility Visibility    @default(public)
+  startDate  DateTime?
+  endDate    DateTime?
+  distanceKm Float         @default(0)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  owner      User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  stops      JourneyStop[]
+  posts      Post[]
+
+  @@index([ownerId, status])
+}
+
+model JourneyStop {
+  id        String    @id @default(cuid())
+  journeyId String
+  order     Int
+  placeId   String?
+  name      String
+  lat       Float
+  lng       Float
+  arrivedAt DateTime?
+  note      String?
+  journey   Journey   @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+  place     Place?    @relation(fields: [placeId], references: [id], onDelete: SetNull)
+
+  @@unique([journeyId, order])
+}
+
+/// Theo dõi một chiều (thay cho kết bạn – BR-FOL-01): follower theo dõi following
+model Follow {
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId])
+  @@index([followingId])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  type      String // friend_request | post_liked | post_commented | review_reply | level_up
+  payload   Json
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt, createdAt])
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  ownerId   String
+  key       String   @unique
+  url       String
+  mime      String
+  width     Int?
+  height    Int?
+  size      Int
+  createdAt DateTime @default(now())
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+}
+
+/// Dấu chân: người dùng check-in tại một địa điểm (tab "Của tôi" trên bản đồ)
+model Checkin {
+  id        String   @id @default(cuid())
+  userId    String
+  placeId   String
+  visitedAt DateTime @default(now())
+  stayDays  Int?
+  photoUrl  String?
+  note      String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  place     Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+
+  @@index([userId, visitedAt])
+  @@index([placeId, visitedAt])
+}
+
+/// Log từ khoá tìm kiếm → tính "xu hướng tìm kiếm" + lịch sử của thành viên
+model SearchLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  keyword   String
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([userId, createdAt])
+}
+
+// ─── Kết nối du lịch (docs/business-rules.md §10b) ──────────────────────────
+
+enum ProviderType {
+  hotel
+  guesthouse
+  homestay
+  resort
+  restaurant
+  cafe
+  tour_guide
+  tour_operator
+  car_rental
+  motorbike_rental
+  shuttle
+}
+
+enum PriceUnit {
+  night
+  day
+  trip
+  person
+}
+
+enum ProviderStatus {
+  pending // chờ duyệt
+  active
+  rejected // bị từ chối – chủ sửa rồi gửi lại
+  suspended
+}
+
+/// Nhà cung cấp dịch vụ: lưu trú, hướng dẫn viên/tour, phương tiện
+model ServiceProvider {
+  id            String           @id @default(cuid())
+  slug          String           @unique
+  name          String
+  type          ProviderType
+  destinationId String
+  address       String?
+  description   String
+  priceFrom     Int // VND
+  priceUnit     PriceUnit
+  languages     String[] // cho hướng dẫn viên: vi, en, ...
+  phone         String
+  zalo          String?
+  website       String?
+  coverUrl      String?
+  verified      Boolean          @default(false)
+  status        ProviderStatus   @default(pending)
+  licenseNumber String? // số giấy phép kinh doanh / thẻ hướng dẫn viên – chỉ chủ & quản trị thấy
+  rejectReason  String?
+  reviewedAt    DateTime?
+  ownerId       String? // tài khoản chủ (khi nhà cung cấp tự đăng ký)
+  ratingAvg     Float            @default(0)
+  reviewCount   Int              @default(0)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  destination   Place            @relation(fields: [destinationId], references: [id], onDelete: Restrict)
+  owner         User?            @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  requests      ConnectRequest[]
+  reviews       ProviderReview[]
+
+  @@index([destinationId, type, status])
+}
+
+enum ConnectRequestStatus {
+  new
+  contacted
+  closed
+}
+
+/// Yêu cầu kết nối của thành viên gửi tới nhà cung cấp
+model ConnectRequest {
+  id           String               @id @default(cuid())
+  providerId   String
+  userId       String
+  message      String
+  travelDate   DateTime?
+  people       Int?
+  contactPhone String?
+  status       ConnectRequestStatus @default(new)
+  createdAt    DateTime             @default(now())
+  provider     ServiceProvider      @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([providerId, status, createdAt])
+  @@index([userId, createdAt])
+}
+
+/// Vote sao cho nhà cung cấp – chỉ người đã gửi yêu cầu kết nối (BR-CONN-07)
+model ProviderReview {
+  id         String          @id @default(cuid())
+  providerId String
+  authorId   String
+  rating     Int
+  content    String          @default("")
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  provider   ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  author     User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, authorId])
+  @@index([providerId, createdAt])
+}

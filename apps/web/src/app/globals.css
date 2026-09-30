@@ -1,0 +1,153 @@
+@import 'tailwindcss';
+
+/*
+ * Token màu khớp bản thiết kế Lovable (oklch gốc). Bản hex cho mobile: packages/design-tokens.
+ * Mặc định giao diện SÁNG (đúng tinh thần "giấy kem" của tạp chí); tối là tuỳ chọn trong Cài đặt.
+ */
+:root {
+  --background: oklch(96.5% 0.012 79);
+  --foreground: oklch(22% 0.025 55);
+  --card: oklch(99% 0.008 80);
+  --popover: oklch(99% 0.008 80);
+  --primary: oklch(42% 0.085 155);
+  --primary-foreground: oklch(98.5% 0.006 80);
+  --secondary: oklch(92% 0.018 78);
+  --muted-foreground: oklch(50% 0.03 55);
+  --accent: oklch(55% 0.19 30); /* đỏ son – sắc đỏ sơn mài, câu đối Tết */
+  --accent-foreground: oklch(99% 0.006 80);
+  --destructive: oklch(57.7% 0.245 27.325);
+  --border: oklch(85% 0.024 75);
+  --ring: oklch(55% 0.09 155);
+  --rating: oklch(92% 0.09 78);
+  --rating-foreground: oklch(48% 0.12 50);
+  --vn-red: oklch(55% 0.21 28);   /* đỏ cờ */
+  --vn-gold: oklch(85% 0.15 88);  /* vàng sao */
+  --vn-gold-deep: oklch(74% 0.16 78); /* vàng đồng – hình vàng trên nền kem vẫn đủ tương phản */
+
+  --hero-foreground: oklch(99% 0.006 80);
+  --hero-muted: oklch(91% 0.018 80);
+  --hero-border: oklch(100% 0 0 / 0.25);
+  --hero-surface: oklch(18% 0.025 55 / 0.45);
+  --hero-surface-hover: oklch(18% 0.025 55 / 0.65);
+
+  --map-surface: oklch(26% 0.04 155);
+  --map-foreground: oklch(98% 0.01 85);
+  --map-muted: oklch(80% 0.03 150);
+  --map-border: oklch(95% 0.015 90 / 0.18);
+  --map-accent: oklch(74% 0.14 58);
+  --map-overlay: oklch(18% 0.03 155 / 0.78);
+}
+
+:root[data-theme='dark'] {
+  --background: oklch(17% 0.02 155);
+  --foreground: oklch(95% 0.01 85);
+  --card: oklch(21% 0.025 155);
+  --popover: oklch(21% 0.025 155);
+  --primary: oklch(72% 0.1 155);
+  --primary-foreground: oklch(18% 0.03 155);
+  --secondary: oklch(27% 0.025 155);
+  --muted-foreground: oklch(72% 0.02 110);
+  --border: oklch(33% 0.025 155);
+  --rating: oklch(35% 0.07 70);
+  --rating-foreground: oklch(88% 0.1 78);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-popover: var(--popover);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-rating: var(--rating);
+  --color-rating-foreground: var(--rating-foreground);
+  --color-vn-red: var(--vn-red);
+  --color-vn-gold: var(--vn-gold);
+  --color-vn-gold-deep: var(--vn-gold-deep);
+  --color-hero-foreground: var(--hero-foreground);
+  --color-hero-muted: var(--hero-muted);
+  --color-hero-border: var(--hero-border);
+  --color-hero-surface: var(--hero-surface);
+  --color-hero-surface-hover: var(--hero-surface-hover);
+  --color-map-surface: var(--map-surface);
+  --color-map-foreground: var(--map-foreground);
+  --color-map-muted: var(--map-muted);
+  --color-map-border: var(--map-border);
+  --color-map-accent: var(--map-accent);
+  --color-map-overlay: var(--map-overlay);
+
+  --font-display: var(--font-lora), 'Lora', Georgia, serif;
+  --font-script: var(--font-dancing), 'Dancing Script', cursive;
+  --font-sans: var(--font-be-vietnam), 'Be Vietnam Pro', system-ui, sans-serif;
+
+  --shadow-editorial: 0 20px 45px -32px oklch(18% 0.025 55 / 0.5);
+  --shadow-mobile: 0 16px 45px -16px oklch(18% 0.025 55 / 0.35);
+
+  --animate-scale-in: scale-in 0.16s ease-out;
+  --animate-slide-up: slide-up 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Ảnh polaroid hai lề: bồng bềnh nhẹ, hiện dần khi vào trang */
+  --animate-decor-float: decor-float 8s ease-in-out infinite;
+  --animate-decor-in: decor-in 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  @keyframes decor-float {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-8px) rotate(1deg); }
+  }
+  @keyframes decor-in {
+    from { opacity: 0; transform: translateY(18px) scale(0.92); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes slide-up {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.97) translateY(-4px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+}
+
+@layer base {
+  * { border-color: var(--border); }
+  html[data-large-text='true'] { font-size: 108%; }
+  body { background: var(--background); color: var(--foreground); }
+  button { cursor: pointer; }
+  /* Tiêu đề Lora: khít chữ nhẹ cho gọn mắt */
+  .font-display { letter-spacing: -0.01em; }
+  /* Điện thoại: ô nhập ≥ 16px để iOS không tự phóng to khi chạm; bỏ nháy xám khi chạm */
+  @media (max-width: 639px) {
+    input, select, textarea { font-size: 16px !important; }
+  }
+  * { -webkit-tap-highlight-color: transparent; }
+}
+
+@layer components {
+  /* Gradient tối dần xuống đáy để chữ trên ảnh hero luôn đọc được */
+  .bg-hero-overlay {
+    background: linear-gradient(oklch(13% 0.025 55 / 0.04) 5%, oklch(13% 0.025 55 / 0.35) 44%, oklch(13% 0.025 55 / 0.96) 100%);
+  }
+  .hero-copy { color: var(--hero-foreground); text-shadow: 0 1px 24px oklch(12% 0.02 55 / 0.38); }
+  .hero-copy p { color: var(--hero-muted); }
+  .eyebrow {
+    margin-bottom: 0.35rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .border-panel { border: 1px solid var(--map-border); }
+  .globe-glow { background: radial-gradient(circle, color-mix(in oklab, var(--map-accent) 35%, transparent), transparent 70%); }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

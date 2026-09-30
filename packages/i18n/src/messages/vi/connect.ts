@@ -1,0 +1,48 @@
+/** Dịch vụ du lịch: nhà cung cấp, đăng ký, quản trị. Quy tắc chữ: docs/content-style.md */
+export const connect = {
+  connect: {
+    eyebrow: 'Dịch vụ du lịch', title: 'Dịch vụ tại điểm đến',
+    lead: 'Chỗ ở, quán ăn, xe đưa đón và hướng dẫn viên tại nơi bạn đến – liên hệ thẳng, không qua trung gian.',
+    all: 'Tất cả', stay: 'Lưu trú', food: 'Ăn uống', guide: 'Hướng dẫn viên & tour', transport: 'Di chuyển', allDestinations: 'Mọi điểm đến',
+    search: 'Tìm theo tên, tỉnh, thành phố…', results: '{count} nhà cung cấp', empty: 'Chưa có nhà cung cấp phù hợp. Thử chọn điểm đến hoặc nhóm dịch vụ khác.', emptyGroup: 'Chưa có dịch vụ nào trong nhóm này.',
+    verified: 'Đã xác minh', from: 'Từ {price}', perNight: '/đêm', perDay: '/ngày', perTrip: '/chuyến', perPerson: '/người',
+    languages: 'Ngôn ngữ: {list}', contact: 'Liên hệ', phone: 'Điện thoại', zalo: 'Zalo', website: 'Website',
+    loginToContact: 'Đăng nhập để xem số liên hệ và gửi yêu cầu', showContact: 'Xem liên hệ',
+    requestTitle: 'Gửi yêu cầu kết nối', message: 'Lời nhắn (ngày đi, số phòng, nhu cầu…)', travelDate: 'Ngày đi', people: 'Số người',
+    yourPhone: 'Số điện thoại của bạn (không bắt buộc)', send: 'Gửi yêu cầu', sent: 'Đã gửi! Nhà cung cấp sẽ liên hệ lại với bạn.',
+    note: 'TravelPad chỉ giúp hai bên tìm thấy nhau, không thu phí đặt chỗ. Bạn nhớ thống nhất giá và điều kiện trực tiếp với nhà cung cấp.', about: 'Giới thiệu',
+    type: { hotel: 'Khách sạn', guesthouse: 'Nhà nghỉ', homestay: 'Homestay', resort: 'Resort', restaurant: 'Nhà hàng', cafe: 'Quán cà phê', tour_guide: 'Hướng dẫn viên', tour_operator: 'Tour', car_rental: 'Thuê ô tô', motorbike_rental: 'Thuê xe máy', shuttle: 'Xe đưa đón' },
+  },
+  providerSignup: {
+    eyebrow: 'Dịch vụ du lịch', title: 'Đăng ký nhà cung cấp',
+    lead: 'Khách sạn, nhà nghỉ, homestay, nhà hàng, hướng dẫn viên, nhà xe… đăng ký miễn phí để du khách tìm thấy và liên hệ thẳng với bạn.',
+    ctaTitle: 'Bạn kinh doanh dịch vụ du lịch?', ctaLead: 'Đăng ký miễn phí để du khách tìm thấy bạn trên TravelPad.', cta: 'Đăng ký nhà cung cấp',
+    steps: '1. Gửi hồ sơ · 2. TravelPad xác minh trong 1–3 ngày làm việc · 3. Dịch vụ của bạn xuất hiện công khai',
+    sectionService: 'Thông tin dịch vụ', sectionContact: 'Liên hệ', sectionLegal: 'Xác minh',
+    name: 'Tên dịch vụ', type: 'Loại dịch vụ', destination: 'Điểm đến', address: 'Địa chỉ', description: 'Giới thiệu (từ 30 ký tự)',
+    priceFrom: 'Giá từ (₫)', priceUnit: 'Đơn vị giá', languages: 'Ngôn ngữ phục vụ, cách nhau bằng dấu phẩy (vd: Tiếng Việt, English)',
+    phone: 'Số điện thoại', zalo: 'Zalo (không bắt buộc)', website: 'Website (không bắt buộc)',
+    license: 'Số giấy phép kinh doanh / thẻ hướng dẫn viên / đăng ký xe', licenseHint: 'Chỉ đội kiểm duyệt TravelPad thấy, dùng để xác minh.',
+    terms: 'Tôi cam kết thông tin là chính xác và đồng ý với điều khoản dành cho nhà cung cấp.',
+    submit: 'Gửi hồ sơ', resubmit: 'Lưu & gửi duyệt lại', invalid: 'Còn vài ô chưa đúng – bạn xem lại các ô được đánh dấu nhé.',
+    errors: {
+      name: 'Tên dịch vụ cần 3–120 ký tự.', description: 'Phần giới thiệu cần 30–2.000 ký tự.', priceFrom: 'Giá phải là số, ví dụ 350000.',
+      phone: 'Số điện thoại gồm 9–15 chữ số.', zalo: 'Số Zalo gồm 9–15 chữ số.', website: 'Nhập địa chỉ đầy đủ, bắt đầu bằng https://',
+      licenseNumber: 'Nhập số giấy phép / thẻ hướng dẫn viên (từ 3 ký tự).', acceptTerms: 'Bạn cần xác nhận cam kết để gửi hồ sơ.', other: 'Thông tin chưa hợp lệ.',
+    },
+    unit: { night: 'Đêm', day: 'Ngày', trip: 'Chuyến', person: 'Người' },
+  },
+  myProviders: {
+    title: 'Dịch vụ của tôi', lead: 'Xem tình trạng duyệt và cập nhật hồ sơ dịch vụ của bạn.', add: 'Đăng ký dịch vụ mới',
+    empty: 'Bạn chưa đăng ký dịch vụ nào. Đăng ký miễn phí, duyệt trong 1–3 ngày làm việc.', submitted: 'Đã gửi hồ sơ! TravelPad sẽ xác minh trong 1–3 ngày làm việc.',
+    status: { pending: 'Chờ duyệt', active: 'Đang hiển thị', rejected: 'Chưa được duyệt', suspended: 'Tạm ẩn' },
+    rejectReason: 'Lý do: {reason}', edit: 'Sửa & gửi lại', view: 'Xem trang công khai', editTitle: 'Sửa hồ sơ dịch vụ',
+    loginRequired: 'Đăng nhập để đăng ký và quản lý dịch vụ của bạn.',
+  },
+  admin: {
+    title: 'Duyệt nhà cung cấp', lead: 'Kiểm tra giấy phép và thông tin liên hệ trước khi cho hiển thị công khai.',
+    forbidden: 'Trang này chỉ dành cho quản trị viên và kiểm duyệt viên.', empty: 'Không còn hồ sơ nào chờ xử lý.',
+    owner: 'Chủ hồ sơ', license: 'Giấy phép', phone: 'Điện thoại', verified: 'Cấp huy hiệu “Đã xác minh”',
+    approve: 'Duyệt', reject: 'Từ chối', reasonPlaceholder: 'Lý do từ chối (từ 10 ký tự) – chủ hồ sơ sẽ đọc được', done: 'Đã xử lý',
+  },
+};

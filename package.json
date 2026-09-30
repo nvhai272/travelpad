@@ -1,0 +1,25 @@
+{
+  "name": "travelpad",
+  "private": true,
+  "packageManager": "pnpm@10.15.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=@travelpad/web...",
+    "dev:api": "turbo run dev --filter=@travelpad/api...",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "check:structure": "node scripts/check-structure.mjs",
+    "check": "pnpm typecheck && pnpm check:structure"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "turbo": "^2.5.6",
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "@travelpad/web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -H 0.0.0.0 -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.87.0",
+    "@travelpad/api-client": "workspace:*",
+    "@travelpad/contracts": "workspace:*",
+    "@travelpad/design-tokens": "workspace:*",
+    "@travelpad/i18n": "workspace:*",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.48.0",
+    "maplibre-gl": "^5.24.0",
+    "next": "^15.5.2",
+    "next-intl": "^4.3.5",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.12",
+    "@travelpad/config": "workspace:*",
+    "@types/node": "^22.18.0",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "tailwindcss": "^4.1.12",
+    "typescript": "^5.9.2"
+  }
+}

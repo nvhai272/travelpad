@@ -1,0 +1,48 @@
+/** Dịch vụ du lịch: nhà cung cấp, đăng ký, quản trị. */
+export const connect = {
+  connect: {
+    eyebrow: 'Travel services', title: 'Services at your destination',
+    lead: 'Find stays, tour guides, transfers and rentals at your destination – contact them directly, no middleman.',
+    all: 'All', stay: 'Stays', food: 'Food & drink', guide: 'Guides & tours', transport: 'Transport', allDestinations: 'All destinations',
+    search: 'Search by name, province, city…', results: '{count} providers', empty: 'No matching providers yet. Try another destination or category.', emptyGroup: 'No services in this group yet.',
+    verified: 'Verified', from: 'From {price}', perNight: '/night', perDay: '/day', perTrip: '/trip', perPerson: '/person',
+    languages: 'Languages: {list}', contact: 'Contact', phone: 'Phone', zalo: 'Zalo', website: 'Website',
+    loginToContact: 'Sign in to see contacts and send a request', showContact: 'Show contact',
+    requestTitle: 'Send a connect request', message: 'Message (dates, needs…)', travelDate: 'Travel date', people: 'People',
+    yourPhone: 'Your phone (optional)', send: 'Send request', sent: 'Sent! The provider will get back to you.',
+    note: 'TravelPad only connects you – no booking fees. Confirm prices and terms directly with the provider.', about: 'About',
+    type: { hotel: 'Hotel', guesthouse: 'Guesthouse', homestay: 'Homestay', resort: 'Resort', restaurant: 'Restaurant', cafe: 'Café', tour_guide: 'Tour guide', tour_operator: 'Tour', car_rental: 'Car rental', motorbike_rental: 'Motorbike rental', shuttle: 'Transfer' },
+  },
+  providerSignup: {
+    eyebrow: 'Travel services', title: 'Register as a service provider',
+    lead: 'Hotels, guesthouses, homestays, restaurants, guides, transport… register for free so travellers can find and contact you directly.',
+    ctaTitle: 'Do you run a travel business?', ctaLead: 'Register for free so travellers can find you on TravelPad.', cta: 'Register as a provider',
+    steps: '1. Submit your details · 2. TravelPad verifies within 1–3 business days · 3. Your listing goes live',
+    sectionService: 'Service details', sectionContact: 'Contact', sectionLegal: 'Verification',
+    name: 'Service name', type: 'Service type', destination: 'Destination', address: 'Address', description: 'Description (30+ characters)',
+    priceFrom: 'Price from (VND)', priceUnit: 'Price unit', languages: 'Languages (guides), comma separated',
+    phone: 'Phone', zalo: 'Zalo (optional)', website: 'Website (optional)',
+    license: 'Business licence / guide card / vehicle registration number', licenseHint: 'Only TravelPad admins see this, for verification.',
+    terms: 'I confirm the information is accurate and accept the provider terms.',
+    submit: 'Submit', resubmit: 'Save & resubmit', invalid: 'Please check the highlighted fields.',
+    errors: {
+      name: 'Service name must be 3–120 characters.', description: 'Description must be 30–2000 characters.', priceFrom: 'Invalid price.',
+      phone: 'Phone must have 9–15 digits.', zalo: 'Zalo number must have 9–15 digits.', website: 'Website must be a full URL starting with https://',
+      licenseNumber: 'Enter your licence / guide card number (3+ characters).', acceptTerms: 'Please confirm to submit.', other: 'Invalid value.',
+    },
+    unit: { night: 'Night', day: 'Day', trip: 'Trip', person: 'Person' },
+  },
+  myProviders: {
+    title: 'My services', lead: 'Track review status and update your listings.', add: 'Register a new service',
+    empty: 'You have not registered a service yet. It is free and reviewed within 1–3 business days.', submitted: 'Submitted! TravelPad will verify it within 1–3 business days.',
+    status: { pending: 'Pending review', active: 'Live', rejected: 'Not approved', suspended: 'Suspended' },
+    rejectReason: 'Reason: {reason}', edit: 'Edit & resubmit', view: 'View public page', editTitle: 'Edit service listing',
+    loginRequired: 'Sign in to register and manage your services.',
+  },
+  admin: {
+    title: 'Review providers', lead: 'Check licences and contact details before a listing goes public.',
+    forbidden: 'This page is for admins and moderators only.', empty: 'Nothing left to review.',
+    owner: 'Owner', license: 'Licence', phone: 'Phone', verified: 'Grant “Verified” badge',
+    approve: 'Approve', reject: 'Reject', reasonPlaceholder: 'Rejection reason (10+ characters) – shown to the owner', done: 'Done',
+  },
+};

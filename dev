@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Công cụ dev của travelpad – mọi thứ chạy trong Docker, host chỉ cần docker (compose v2).
+# Dùng: ./dev <lệnh> [tham số]   ·   ./dev help
+set -euo pipefail
+cd "$(dirname "$0")"
+export UID GID="$(id -g)"
+DC="docker compose"
+run() { $DC run --rm --no-deps install "$@"; }
+
+cmd="${1:-help}"; shift || true
+case "$cmd" in
+  init)        # Lần đầu: .env, build image, cài deps, migrate + seed
+    [ -f .env ] || cp .env.example .env
+    $DC build install
+    $DC up -d postgres redis s3 mailpit
+    $DC run --rm install
+    "$0" migrate && "$0" seed ;;
+  up)          # Chạy toàn bộ stack
+    $DC up -d
+    echo "Web http://localhost:3000 · API http://localhost:4000/v1 · Swagger http://localhost:4000/docs · Mail http://localhost:8025" ;;
+  down)        $DC down ;;
+  restart)     [ $# -gt 0 ] || set -- api web; $DC restart "$@" ;;
+  logs)        $DC logs -f "$@" ;;
+  ps)          $DC ps ;;
+  sh)          run bash ;;
+  pnpm)        run pnpm "$@" ;;                                   # ./dev pnpm --filter @travelpad/web add dayjs
+  migrate)     $DC run --rm install pnpm --filter @travelpad/api exec prisma migrate dev "$@" ;;
+  migrate-new) $DC run --rm install pnpm --filter @travelpad/api exec prisma migrate dev --name "${1:?tên migration}" ;;
+  seed)        $DC run --rm install pnpm --filter @travelpad/api prisma:seed ;;
+  prod-migrate) # Chạy migration lên DB deploy (Neon): PROD_DATABASE_URL='postgresql://…' ./dev prod-migrate
+    $DC run --rm --no-deps -e DATABASE_URL="${PROD_DATABASE_URL:?cần PROD_DATABASE_URL}" install pnpm --filter @travelpad/api exec prisma migrate deploy ;;
+  prod-seed)   # Nạp dữ liệu mẫu lên DB deploy: PROD_DATABASE_URL='postgresql://…' ./dev prod-seed
+    $DC run --rm --no-deps -e DATABASE_URL="${PROD_DATABASE_URL:?cần PROD_DATABASE_URL}" install pnpm --filter @travelpad/api prisma:seed ;;
+  studio)      $DC run --rm -p 5555:5555 install pnpm --filter @travelpad/api exec prisma studio --port 5555 --browser none ;;
+  typecheck|lint|build|test) run pnpm "$cmd" ;;
+  check)       run pnpm check ;;
+  shots)       # Chụp giao diện điện thoại (Playwright trong Docker): ./dev shots [FULL=1 PAGES=/,/map LOGIN_EMAIL=… LOGIN_PASSWORD=…]
+    docker run --rm --network host -u "$UID:$GID" -e HOME=/tmp -e PW_DIR=/tmp/pw \
+      -e FULL -e PAGES -e OUT -e DEVICE -e LOGIN_EMAIL -e LOGIN_PASSWORD -v "$PWD":/work -w /work mcr.microsoft.com/playwright:v1.55.0-noble \
+      sh -c 'mkdir -p /tmp/pw && cd /tmp/pw && npm i --silent --no-audit --no-fund playwright@1.55.0 >/dev/null && cd /work && node scripts/mobile-shots.mjs' ;;                                   # typecheck + kiểm tra cấu trúc code
+  clean)       run sh -c "rm -rf node_modules apps/*/node_modules packages/*/node_modules apps/*/dist packages/*/dist apps/web/.next .turbo" ;;
+  nuke)        $DC down -v ;;                                     # XOÁ dữ liệu DB/S3
+  help|*)
+    grep -E '^  [a-z|-]+\)' "$0" | sed -E 's/^  ([a-z|-]+)\).*# ?(.*)$/  \1\t\2/; s/^  ([a-z|-]+)\).*/  \1/' ;;
+esac

@@ -1,0 +1,36 @@
+# Render Blueprint – API NestJS (gói Free). Hướng dẫn: docs/deploy.md
+# Render → New → Blueprint → chọn repo; các biến `sync: false` nhập tay trên dashboard.
+services:
+  - type: web
+    name: travelpad-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerContext: .
+    dockerfilePath: ./apps/api/Dockerfile
+    healthCheckPath: /v1/health
+    autoDeploy: true
+    # Chỉ build lại khi phần API (hoặc package nó dùng) thay đổi – sửa web không làm API deploy lại.
+    buildFilter:
+      paths:
+        - apps/api/**
+        - packages/contracts/**
+        - packages/config/**
+        - pnpm-lock.yaml
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "4000"
+      - key: API_PORT
+        value: "4000"
+      - key: TRUST_PROXY
+        value: "true"
+      - key: DATABASE_URL # Neon – chuỗi kết nối Direct (không pooler), có ?sslmode=require
+        sync: false
+      - key: CORS_ORIGINS # https://<tên-dự-án>.vercel.app
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true

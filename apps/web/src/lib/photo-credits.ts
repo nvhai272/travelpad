@@ -1,0 +1,62 @@
+/**
+ * Ghi công ảnh thật (Wikimedia Commons). Giấy phép CC BY / CC BY-SA bắt buộc ghi tên tác giả + giấy phép + nguồn;
+ * CC0 / Public domain không bắt buộc nhưng vẫn ghi cho minh bạch. Thêm ảnh mới vào public/images → thêm dòng ở đây.
+ */
+export type PhotoCredit = { artist: string; license: string; source: string };
+
+export const PHOTO_CREDITS: Record<string, PhotoCredit> = {
+  '/images/places/sa-pa.jpg': { artist: "Jakub Hałun", license: 'CC BY 4.0', source: 'https://commons.wikimedia.org/wiki/File:Road_and_paddy_fields_in_Sa_Pa,_Vietnam,_20240126_1203_3590.jpg' },
+  '/images/places/ha-giang.jpg': { artist: "NKSTTSSHNVN", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Du_Gi%C3%A0.jpg' },
+  '/images/places/ha-noi.jpg': { artist: "Rolf Müller", license: 'CC BY-SA 3.0', source: 'https://commons.wikimedia.org/wiki/File:Hoan_kiem_lake_huc_bridge_hanoi_2007_01.jpg' },
+  '/images/places/ha-long.jpg': { artist: "Thomas Hirsch", license: 'CC BY-SA 3.0', source: 'https://commons.wikimedia.org/wiki/File:Halong_Bay_in_Vietnam.jpg' },
+  '/images/places/da-nang.jpg': { artist: "Jpatokal", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:My_Khe_Beach_Danang_Coastline.jpg' },
+  '/images/places/da-lat.jpg': { artist: "P. Hughes", license: 'CC BY 4.0', source: 'https://commons.wikimedia.org/wiki/File:Da_Lat_-_Xuan_Huong_Lake.jpg' },
+  '/images/places/tp-hcm.jpg': { artist: "Jim 陳", license: 'CC BY-SA 2.0', source: 'https://commons.wikimedia.org/wiki/File:Ho_Chi_Minh_City_Skyline_(night).jpg' },
+  '/images/places/phu-quoc.jpg': { artist: "Elmschrat", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:2_Phu_Quoc_beach.jpg' },
+  '/images/places/dinh-fansipan.jpg': { artist: "Vivu Vietnam", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Fansipan_summit_pyramid_monument_sunset_sea_of_clouds_Sa_Pa_Vietnam.jpg' },
+  '/images/places/ban-cat-cat.jpg': { artist: "Jakub Hałun", license: 'CC BY 4.0', source: 'https://commons.wikimedia.org/wiki/File:Water_wheels_in_Cat_Cat_village,_Sa_Pa,_Vietnam,_20240126_1140_3535.jpg' },
+  '/images/places/homestay-ta-van.jpg': { artist: "Christophe95", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Rice_terraces_in_T%E1%BA%A3_Van_05.jpg' },
+  '/images/places/cam-trai-doi-mong-ngua.jpg': { artist: "Christophe95", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Rice_terraces_in_Sa_Pa_03.jpg' },
+  '/images/places/thang-co-cho-sapa.jpg': { artist: "Christophe95", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Market_in_Sa_Pa.jpg' },
+  '/images/places/deo-ma-pi-leng.jpg': { artist: "Khánh Hmoong", license: 'CC BY 2.0', source: 'https://commons.wikimedia.org/wiki/File:Ma_Pi_Leng_Pass_winding_road_Ha_Giang_Vietnam.jpg' },
+  '/images/places/pho-co-dong-van.jpg': { artist: "trungydang", license: 'CC BY 3.0', source: 'https://commons.wikimedia.org/wiki/File:Dong_Van_market,tt_Dong_Van_,_Hagiang,_Vi%E1%BB%87t_Nam_-_panoramio.jpg' },
+  '/images/places/pho-bat-dan.jpg': { artist: "Codename5281", license: 'CC BY-SA 3.0', source: 'https://commons.wikimedia.org/wiki/File:Ph%E1%BB%9F_b%C3%B2,_C%E1%BA%A7u_Gi%E1%BA%A5y,_H%C3%A0_N%E1%BB%99i.jpg' },
+  '/images/places/ho-hoan-kiem.jpg': { artist: "Jorge Láscar from Australia", license: 'CC BY 2.0', source: 'https://commons.wikimedia.org/wiki/File:Lascar_The_Huc_bridge_-_Hoan_Kiem_Lake_(4550383673).jpg' },
+  '/images/places/du-thuyen-vinh-ha-long.jpg': { artist: "Arianos", license: 'Public domain', source: 'https://commons.wikimedia.org/wiki/File:Asia_cruise_in_Halong_bay_Vietnam.JPG' },
+  '/images/places/dao-ti-top.jpg': { artist: "Steffen Schmitz", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:H%E1%BA%A1_Long_Bay,_Ti_T%E1%BB%91p_Island,_2020-01_CN-01.jpg' },
+  '/images/places/ban-dao-son-tra.jpg': { artist: "Christophe95", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Son_Tra_Peninsula.jpg' },
+  '/images/places/mi-quang-ba-mua.jpg': { artist: "Christopher Crouzet", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:M%C3%AC_Qu%E1%BA%A3ng,_Da_Nang,_Vietnam.jpg' },
+  '/images/places/ba-na-hills.jpg': { artist: "Vivu Vietnam", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Aerial_view_of_the_Golden_Bridge,_Ba_Na_Hills,_Da_Nang,_Vietnam.jpg' },
+  '/images/places/cam-trai-langbiang.jpg': { artist: "Tilamdong", license: 'Public domain', source: 'https://commons.wikimedia.org/wiki/File:Langbiang_Mountain.JPG' },
+  '/images/places/ca-phe-doi-thong.jpg': { artist: "Diane Selwyn", license: 'CC BY-SA 3.0', source: 'https://commons.wikimedia.org/wiki/File:Palace_I,_01.jpg' },
+  '/images/places/resort-ven-ho-tuyen-lam.jpg': { artist: "Diane Selwyn", license: 'Public domain', source: 'https://commons.wikimedia.org/wiki/File:Tuyen_Lam_Lake_07.jpg' },
+  '/images/places/pho-am-thuc-vinh-khanh.jpg': { artist: "choi kwangmo", license: 'CC0', source: 'https://commons.wikimedia.org/wiki/File:20180413_190400Saigon_Hotpot_Night_Food_Tour_Ho_Thi_Ky_Flower_Market.jpg' },
+  '/images/places/bai-sao.jpg': { artist: "Trantuonglam", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Bai-sao-phu-quoc-tuonglamphotos.jpg' },
+  '/images/places/cam-trai-hon-thom.jpg': { artist: "Vivu Vietnam", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Hon_Thom_Cable_Car_aerial_view_Phu_Quoc_Island_Vietnam.jpg' },
+  '/images/places/homestay-dong-van.jpg': { artist: "Daniel Berthold", license: 'CC BY-SA 3.0', source: 'https://commons.wikimedia.org/wiki/File:SaPhin_entrance.JPG' },
+  '/images/places/banh-cuon-trung-ha-giang.jpg': { artist: "Casablanca1911", license: 'Public domain', source: 'https://commons.wikimedia.org/wiki/File:B%C3%A1nh_cu%E1%BB%91n_Thanh_Tr%C3%AC.jpg' },
+  '/images/places/ca-phe-trung-pho-co.jpg': { artist: "David McKelvey from Brisbane, Australia", license: 'CC BY 2.0', source: 'https://commons.wikimedia.org/wiki/File:Egg_Coffee_(6923068614).jpg' },
+  '/images/places/khach-san-pho-co.jpg': { artist: "Jakub Hałun", license: 'CC BY 4.0', source: 'https://commons.wikimedia.org/wiki/File:Street_seller_of_fingered_citrons_in_Old_Town_of_Hanoi,_20240204_1335_5772.jpg' },
+  '/images/places/cha-muc-ha-long.jpg': { artist: "Hoangkid (Đặng Thái Hoàng)", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Ch%E1%BA%A3_m%E1%BB%B1c.jpg' },
+  '/images/places/resort-bien-my-khe.jpg': { artist: "Christophe95", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:My_Khe_Beach_9.jpg' },
+  '/images/places/ho-xuan-huong.jpg': { artist: "Diane Selwyn", license: 'Public domain', source: 'https://commons.wikimedia.org/wiki/File:Xuan_Huong_Lake_05.jpg' },
+  '/images/places/cho-ben-thanh.jpg': { artist: "Diego Delso", license: 'CC BY-SA 3.0', source: 'https://commons.wikimedia.org/wiki/File:Ben_Thanh,_Ciudad_Ho_Chi_Minh,_Vietnam,_2013-08-14,_DD_01.JPG' },
+  '/images/places/khach-san-quan-1.jpg': { artist: "Steffen Schmitz", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Ho_Chi_Minh_City,_Nguyen_Hue_Street,_2020-01_CN-04.jpg' },
+  '/images/places/cho-dem-dinh-cau.jpg': { artist: "FrogsLegs71", license: 'CC BY-SA 3.0', source: 'https://commons.wikimedia.org/wiki/File:Fish_for_sale_in_Phu_Quoc_night_market_Vietnam.jpg' },
+  '/images/places/lm-khue-van-cac.jpg': { artist: "Daderot", license: 'CC0', source: 'https://commons.wikimedia.org/wiki/File:Constellation_of_Literature_pavilion_-_Temple_of_Literature,_Hanoi_-_DSC04557.JPG' },
+  '/images/places/lm-ha-long.jpg': { artist: "lumoplank", license: 'CC0', source: 'https://commons.wikimedia.org/wiki/File:Ha_Long_Bay_-_Halong1407.jpg' },
+  '/images/places/lm-mu-cang-chai.jpg': { artist: "Doan Tuan danny_pham93", license: 'CC0', source: 'https://commons.wikimedia.org/wiki/File:Terraces_in_Che_Cu_Nha_commune,_Mu_Cang_Chai_(Unsplash).jpg' },
+  '/images/places/lm-hoi-an.jpg': { artist: "Steffen Schmitz", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:H%E1%BB%99i_An,_Ch%C3%B9a_C%E1%BA%A7u,_2020-01_CN-02.jpg' },
+  '/images/places/lm-golden-bridge.jpg': { artist: "Vivu Vietnam", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Golden_Bridge_above_the_clouds_Ba_Na_Hills_Da_Nang_Vietnam.jpg' },
+  '/images/places/lm-cai-rang.jpg': { artist: "Christophe95", license: 'CC BY-SA 4.0', source: 'https://commons.wikimedia.org/wiki/File:Cai_Rang_Floating_Market_3.jpg' },
+  // Trang Văn hóa (/culture)
+  '/images/culture/non-la.jpg': { artist: "Lucas Jans from USA", license: 'CC BY-SA 2.0', source: 'https://commons.wikimedia.org/wiki/File:Non_La_2_-_Flickr_-_Lucas_Jans.jpg' },
+  '/images/culture/ao-dai.jpg': { artist: "Tú Phương Thành", license: 'CC BY-SA 2.0', source: 'https://commons.wikimedia.org/wiki/File:White_%C3%A1o_d%C3%A0i_6.jpg' },
+  '/images/culture/trong-dong.jpg': { artist: "VuThiAnh", license: 'Public domain', source: 'https://commons.wikimedia.org/wiki/File:HoangHaBronzeDrum.jpg' },
+  '/images/culture/hoa-sen.jpg': { artist: "Quangpraha", license: 'CC0', source: 'https://commons.wikimedia.org/wiki/File:Collecting_lotus_flowers,_Vietnam.jpg' },
+  '/images/culture/co-do-hue.jpg': { artist: "Vyacheslav Argenberg", license: 'CC BY 4.0', source: 'https://commons.wikimedia.org/wiki/File:Vietnam,_Hue,_Imperial_City_of_Hue,_Meridian_Gate.jpg' },
+  '/images/culture/mua-roi-nuoc.jpg': { artist: "Greg Willis from Denver, CO, usa", license: 'CC BY-SA 2.0', source: 'https://commons.wikimedia.org/wiki/File:Hanoi_Water_Puppets_-_Harvest_Festival_(3695188604).jpg' },
+  '/images/culture/banh-mi.jpg': { artist: "Stu Spivack", license: 'CC BY-SA 2.0', source: 'https://commons.wikimedia.org/wiki/File:B%C3%A1nh_m%C3%AC.jpg' },
+};
+
+export const creditFor = (src?: string | null): PhotoCredit | undefined => (src ? PHOTO_CREDITS[src] : undefined);
